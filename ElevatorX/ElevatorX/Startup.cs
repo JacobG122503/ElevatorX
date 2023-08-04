@@ -1,18 +1,29 @@
-﻿namespace ElevatorX
+﻿using Figgle;
+
+namespace ElevatorX
 {
     public class Startup
     {
         public static void Main(string[] args)
         {
-            for (int i = 0; i < 50; i++)
+            int nmbFloors;
+            int nmbElevators;
+            bool confirmed = false;
+
+            Console.WriteLine(FiggleFonts.Banner3D.Render("ElevatorX"));
+            Thread.Sleep(1000);
+
+            while (!confirmed)
             {
-                for (int j = 0; j < i; j++)
-                {
-                    Console.Write("=");
-                }
-                Console.WriteLine();
-                Thread.Sleep(20);
+                Console.WriteLine("How many floors would you like your building to have? ");
+                nmbFloors = int.Parse(Console.ReadLine());
+                
             }
+            
+
+
+
+            Console.WriteLine(nmbFloors);
         }
     }
 }
