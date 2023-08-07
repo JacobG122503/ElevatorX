@@ -1,5 +1,7 @@
 import java.util.Scanner;
 
+import Objects.World;
+
 public class Startup {
     
     private static int _nmbOfFloors;
@@ -37,18 +39,19 @@ public class Startup {
             }
         }
         scnr.close();
-        
+
         Start();
     }
 
     private static void Start() throws InterruptedException {
         System.out.print("Starting program");
         for (int i = 0; i < 5; i++) {
-            Thread.sleep(400);
+            Thread.sleep(100);
             System.out.print(".");
         }
         Clear();
 
+        World world = new World(_nmbOfFloors, _nmbOfElevators);
     }
 
     private static void Clear() {
