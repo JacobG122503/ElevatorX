@@ -1,11 +1,55 @@
 package Objects;
+
+import java.util.Scanner;
+
 public class World {
     
     private Building _building;
+    private int _ticks;
+    private Scanner _scnr;
 
-    public World(int nbmOfFloors, int nmbOfElevators) {
+    public World(int nbmOfFloors, int nmbOfElevators, int ticks, Scanner scnr) {
 
-        _building = new Building(nbmOfFloors, nmbOfElevators);
+        _building = new Building(nbmOfFloors, nmbOfElevators, scnr);
+        _ticks = ticks;
+        _scnr = scnr;
+    }
+
+    public void Commence() {
+        String result = "";
         _building.Build();
+
+        while (!result.equals("s")) {
+            System.out.println("press c to call an elevator or n to go to next interval. s to stop program");
+            result = _scnr.next();
+
+            if (result.equals("c")) {
+                _building.CallElevator();
+            } 
+            else if (result.equals("s")) {
+                Clear();
+                continue;
+            }
+
+            TickToNextInterval();
+        }
+    }
+    
+    private void TickToNextInterval() {
+        for (int i = 0; i < _ticks; i++) {
+            try {
+                Thread.sleep(500);
+            } 
+            catch (InterruptedException e) {
+                System.err.println(e.getMessage());
+            }
+            Clear();
+            _building.Tick();
+            _building.Build();
+        }
+    }
+
+    private static void Clear() {
+        System.out.print("\033\143");
     }
 }

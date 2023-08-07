@@ -6,6 +6,7 @@ public class Startup {
     
     private static int _nmbOfFloors;
     private static int _nmbOfElevators;
+    private static int _ticks;
 
     public static void main(String args[]) throws InterruptedException {
 
@@ -29,7 +30,11 @@ public class Startup {
             System.out.println("How many elevators would you like your building to have?");
             _nmbOfElevators = scnr.nextInt();
 
+            System.out.println("How many ticks would you like to have per interval? (1 tick = 1/2 second)");
+            _ticks = scnr.nextInt();
+
             System.out.println("Is this correct? Floors: " + _nmbOfFloors + ", Elevators: " + _nmbOfElevators);
+            System.out.println("Ticks per interval: " + _ticks);
             System.out.println("y or n");
 
             String result = scnr.next();
@@ -38,12 +43,12 @@ public class Startup {
                 confirmed = true;
             }
         }
-        scnr.close();
 
-        Start();
+        Start(scnr);
+        scnr.close();
     }
 
-    private static void Start() throws InterruptedException {
+    private static void Start(Scanner scnr) throws InterruptedException {
         System.out.print("Starting program");
         for (int i = 0; i < 5; i++) {
             Thread.sleep(100);
@@ -51,7 +56,8 @@ public class Startup {
         }
         Clear();
 
-        World world = new World(_nmbOfFloors, _nmbOfElevators);
+        World world = new World(_nmbOfFloors, _nmbOfElevators, _ticks, scnr);
+        world.Commence();
     }
 
     private static void Clear() {
