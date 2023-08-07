@@ -1,18 +1,21 @@
 package Objects;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Building {
     private int _columns;
     private int _rows;
+    private Scanner _scnr;
     private ArrayList<Elevator> _elevators;
     private String[][] _building;
     private String Green = "\u001B[32m";
     private String White = "\u001B[0m";
 
-    public Building(int floors, int nmbOfElevators) {
+    public Building(int floors, int nmbOfElevators, Scanner scnr) {
         _rows = floors;
         _columns = (nmbOfElevators * 2) + 1;
+        _scnr = scnr;
 
         _building = new String[_rows][_columns];
 
@@ -25,7 +28,7 @@ public class Building {
             for (int c = 0; c < _columns; c++) {
                 Elevator selected = GetElevator(r, c);
                 if (selected != null) {
-                    _building[r][c] = Green + "[X]";
+                    _building[r][c] = Green + "["+ selected._elevatorId +"]";
                     continue;
                 }
                 _building[r][c] = White + " O ";
@@ -49,6 +52,7 @@ public class Building {
         for (int i = 0; i < nmbOfElevators; i++, columnPlacement += 2) {
             _elevators.add(new Elevator());
             _elevators.get(i)._column = columnPlacement;
+            _elevators.get(i)._elevatorId = (char) ((i + 1) + '0');
         }
     }
 
@@ -61,5 +65,26 @@ public class Building {
             }
         }
         return selected;
+    }
+
+    public void CallElevator() {
+        System.out.println("What floor would you like to call the Elevator to?");
+        int calledRow = _scnr.nextInt();
+        Elevator elevator = FindNearestElevator(calledRow);
+
+    }
+    
+    private Elevator FindNearestElevator(int floor) {
+        int[] distances = new int[_elevators.size()];
+
+        for (int i = 0; i < _elevators.size(); i++) {
+            Elevator elevator = _elevators.get(i);
+            distances[i] = Math.abs(elevator._currentRow - floor);
+        }
+        return null;
+    }
+
+    public void Tick() {
+
     }
 }
