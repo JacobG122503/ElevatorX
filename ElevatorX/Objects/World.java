@@ -20,11 +20,13 @@ public class World {
         _building.Build();
 
         while (!result.equals("s")) {
-            System.out.println("press c to call an elevator or n to go to next interval. s to stop program");
+            _building.CheckAndPrintArriveStrings();
+            System.out.println("Press c to call an elevator or n to go to next interval. s to stop program");
             result = _scnr.next();
 
             if (result.equals("c")) {
                 _building.CallElevator();
+                continue;
             } 
             else if (result.equals("s")) {
                 Clear();
@@ -32,13 +34,15 @@ public class World {
             }
 
             TickToNextInterval();
+            _building.CheckForIdleElevators();
         }
     }
+
     
     private void TickToNextInterval() {
         for (int i = 0; i < _ticks; i++) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(333);
             } 
             catch (InterruptedException e) {
                 System.err.println(e.getMessage());
