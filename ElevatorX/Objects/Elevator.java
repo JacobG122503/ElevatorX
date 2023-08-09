@@ -24,15 +24,20 @@ public class Elevator {
         return "[" + _elevatorIdChar + "]";
     }
 
+    public int CurrentlyGoingTo() {
+        return !_elevatorCalls.isEmpty() ? _elevatorCalls.get(0) : null;
+    }
+
     public void SetElevatorId(int id) {
         _elevatorIdChar =  (char) ((id + 1) + 64);
     }
 
     public void CallElevatorTo(int floor) {
         _elevatorCalls.add(floor);
+        this.StartMovingTowards();
     }
 
-    public String Tick() {
+    public Elevator Tick() {
         MoveElevator();
         return CheckIfHasArrived();
     }
@@ -60,20 +65,23 @@ public class Elevator {
         }
     }
 
-    private String CheckIfHasArrived() {
-        String returnStr = "";
+    private Elevator CheckIfHasArrived() {
+        Elevator arrivedElevator = null;
         for (int i = 0; i < _elevatorCalls.size(); i++) {
             if (_currentRow == _elevatorCalls.get(i)) {
-                returnStr = "Elevator " + GetElevatorView() + " has arrived at floor, " + (_elevatorCalls.get(i) + 1);
+                if (!_isResetting) {
+                    arrivedElevator = this;
+                }
                 _elevatorCalls.remove(i);
             }
+            
         }
         if (_elevatorCalls.isEmpty()) {
             _isGoingDown = false;
             _isGoingUp = false;
             _isResetting = false;
         }
-        return returnStr;
+        return arrivedElevator;
     }
 
     public boolean AtGroundLevel() {
@@ -85,6 +93,16 @@ public class Elevator {
     }
 
     public boolean IsIdle() {
-        return !(_isGoingDown && _isGoingUp);
+        return !(_isGoingDown || _isGoingUp);
+    }
+
+    public void StartMovingTowards() {
+        if (_currentRow < CurrentlyGoingTo()) {
+            _isGoingUp = true;
+            _isGoingDown = false;
+        } else if (_currentRow > CurrentlyGoingTo()) {
+            _isGoingDown = true;
+            _isGoingUp = false;
+        }
     }
 }

@@ -9,18 +9,17 @@ public class Building {
     private Scanner _scnr;
     private ArrayList<Elevator> _elevators;
     private String[][] _building;
-    private String Green = "\u001B[32m";
-    private String White = "\u001B[0m";
-    private String Blue = "\u001B[34m";
+    private final String GREEN = "\u001B[32m";
+    private final String WHITE = "\u001B[0m";
+    private final String BLUE = "\u001B[34m";
+    private final String RED = "\u001B[31m";
     private int _ticks;
-    private ArrayList<String> _hasArrivedStrings;
     private ArrayList<Elevator> _hasArrivedElevators;
 
     public Building(int floors, int nmbOfElevators, Scanner scnr) {
         _rows = floors;
         _columns = (nmbOfElevators * 2) + 1;
         _scnr = scnr;
-        _hasArrivedStrings = new ArrayList<>();
         _hasArrivedElevators = new ArrayList<>();
 
         _building = new String[_rows][_columns];
@@ -35,10 +34,10 @@ public class Building {
             for (int c = 0; c < _columns; c++) {
                 Elevator selected = GetElevator(r, c);
                 if (selected != null) {
-                    _building[r][c] = Green + selected.GetElevatorView();
+                    _building[r][c] = GREEN + selected.GetElevatorView();
                     continue;
                 }
-                _building[r][c] = White + " O ";
+                _building[r][c] = WHITE + " O ";
             }
         }
 
@@ -46,12 +45,12 @@ public class Building {
         for (int r = _rows - 1; r >= 0; r--) {
             //Print floor number and spaces to the left
             String floorNmb = (""+ (r+1));
-            System.out.print(Blue + floorNmb);
+            System.out.print(BLUE + floorNmb);
             for (int i = 3 - floorNmb.length(); i > 0; i--) {
                 System.out.print(" ");
             }
             //Print building + elevators
-            System.out.print(White);
+            System.out.print(WHITE);
             for (int c = 0; c < _columns; c++) {
                 System.out.print(_building[r][c]);
             }
@@ -118,7 +117,8 @@ public class Building {
         }
         Elevator elevator = FindNearestElevator(calledRow, wantToGoUp, wantToGoDown);
         if (elevator == null) {
-            System.out.println("All elevators are unavailable. Please try again later. Hit enter to continue. ");
+            System.out.println(RED + "All elevators are unavailable. Please try again later.");
+            System.out.print(WHITE);
             _scnr.nextLine();
             return;
         }
@@ -130,7 +130,7 @@ public class Building {
     private Elevator FindNearestElevator(int floor, boolean wantToGoUp, boolean wantToGoDown) {
         int[] distances = new int[_elevators.size()];
 
-        //Get array of all elevators distances that are going in wanted direction
+        //Get array of all elevators distances 
         for (int i = 0; i < _elevators.size(); i++) {
             Elevator elevator = _elevators.get(i);
             distances[i] = elevator._currentRow - floor;
@@ -146,24 +146,25 @@ public class Building {
             if (currentElevator._isResetting) {
                 continue;
             }
-            //When elevator is already going up
-            if (currentElevator._isGoingUp) {
-                if (currentElevator._isGoingUp && currentDistance < 0 ) {
-                    distanceCandidates.add(Math.abs(currentDistance));
-                    closestElevatorCandidates.add(currentElevator);
-                } 
-            }
-            //When elevator is already going down
-            if (currentElevator._isGoingDown) {
-                if (currentElevator._isGoingDown && currentDistance > 0) {
-                    distanceCandidates.add(currentDistance);
-                    closestElevatorCandidates.add(currentElevator);
-                } 
-            }
             //If elevator is at ground level and idle
             if (currentElevator.AtGroundLevel() && currentElevator.IsIdle()) {
                 distanceCandidates.add(Math.abs(currentDistance));
                 closestElevatorCandidates.add(currentElevator);
+                continue;
+            }
+            //When elevator is already going up AND elevators target floor is above called floor AND elevator is below floor called.
+            if (currentElevator._isGoingUp && floor < currentElevator.CurrentlyGoingTo() && floor > currentElevator._currentRow && wantToGoUp) {
+                if (currentDistance < 0 ) {
+                    distanceCandidates.add(Math.abs(currentDistance));
+                    closestElevatorCandidates.add(currentElevator);
+                } 
+            }
+            //When elevator is already going down AND elevators target is below called floor AND elevator is above the floor called 
+            if (currentElevator._isGoingDown && floor > currentElevator.CurrentlyGoingTo() && floor < currentElevator._currentRow && wantToGoDown) {
+                if (currentDistance > 0) {
+                    distanceCandidates.add(currentDistance);
+                    closestElevatorCandidates.add(currentElevator);
+                } 
             }
             //If elevator is on floor already, return.
             if (currentDistance == 0) {
@@ -181,16 +182,14 @@ public class Building {
                 closestElevator = closestElevatorCandidates.get(i);
             }
         }
-        // closestElevator._isGoingDown = wantToGoDown;
-        // closestElevator._isGoingUp = wantToGoUp;
+        
         return closestElevator;
     }
 
     public void Tick() {
         for (Elevator elevator : _elevators) {
-            String result = elevator.Tick();
-            if (!result.equals("")) {
-                _hasArrivedStrings.add(result);
+            Elevator result = elevator.Tick();
+            if (result != null) {
                 _hasArrivedElevators.add(elevator);
             }
         }
@@ -204,10 +203,18 @@ public class Building {
     }
 
     public void CheckAndPrintArriveStrings() {
-        if (!_hasArrivedStrings.isEmpty()) {
-            for (String str : _hasArrivedStrings) {
-
+        ArrayList<Elevator> toRemove = new ArrayList<>();
+        if (!_hasArrivedElevators.isEmpty()) {
+            for (Elevator elevator : _hasArrivedElevators) {
+                System.out.println(GREEN + "Elevator " + elevator.GetElevatorView() + " has arrived at floor " + BLUE + (elevator._currentRow + 1));
+                System.out.print(WHITE);
+                System.out.println("Where would you like to send it next?");
+                System.out.print(BLUE);
+                int newCall = _scnr.nextInt();
+                System.out.print(WHITE);
+                toRemove.add(elevator);
             }
+            _hasArrivedElevators.removeAll(toRemove);
         }
     }
     private static void Clear() {

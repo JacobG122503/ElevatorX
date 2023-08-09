@@ -19,7 +19,7 @@ public class World {
         String result = "";
         _building.Build();
 
-        while (!result.equals("s")) {
+        while (!result.equals("s")) { //TODO Add demolish building option and animation
             _building.CheckAndPrintArriveStrings();
             System.out.println("Press c to call an elevator or n to go to next interval. s to stop program");
             result = _scnr.next();
