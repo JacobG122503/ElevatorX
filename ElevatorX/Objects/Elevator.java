@@ -34,7 +34,9 @@ public class Elevator {
 
     public void CallElevatorTo(int floor) {
         _elevatorCalls.add(floor);
-        this.StartMovingTowards();
+        if (floor != _currentRow) {
+            this.StartMovingTowards();
+        }
     }
 
     public Elevator Tick() {

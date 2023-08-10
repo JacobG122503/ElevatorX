@@ -15,14 +15,15 @@ public class Building {
     private final String RED = "\u001B[31m";
     private int _ticks;
     private ArrayList<Elevator> _hasArrivedElevators;
+    public int _intervals;
 
     public Building(int floors, int nmbOfElevators, Scanner scnr) {
         _rows = floors;
         _columns = (nmbOfElevators * 2) + 1;
         _scnr = scnr;
         _hasArrivedElevators = new ArrayList<>();
-
         _building = new String[_rows][_columns];
+        _intervals = 0;
 
         CreateElevators(nmbOfElevators);
         _ticks = 0;
@@ -68,12 +69,6 @@ public class Building {
             _elevators.add(new Elevator());
             _elevators.get(i)._column = columnPlacement;
             _elevators.get(i).SetElevatorId(i);
-            // //TEST
-            // if (_elevators.get(i)._elevatorIdChar == 'D') {
-            //     _elevators.get(i)._currentRow = 6;
-            //     _elevators.get(i)._isGoingUp= true;
-            //     _elevators.get(i)._isResetting = true;
-            // }
         }
     }
 
@@ -96,14 +91,18 @@ public class Building {
         boolean wantToGoDown = false;
         while (!correctlyTyped) {
             System.out.println("What floor would you like to call the elevator to?");
+            System.out.print(BLUE);
             calledRow = _scnr.nextInt();
+            System.out.print(WHITE);
             //Account for the + 1 in the display
             calledRow -= 1;
-            if (calledRow > _rows || calledRow < 0) {
+            if (calledRow >= _rows || calledRow < 0) {
                 continue;
             }
             System.out.println("Would you like to send the elevator 'up' or 'down' ");
+            System.out.print(BLUE);
             String UpOrDown = _scnr.next();
+            System.out.print(WHITE);
             if (UpOrDown.equals("up")) {
                 wantToGoUp= true;
                 wantToGoDown = false;
@@ -209,9 +208,21 @@ public class Building {
                 System.out.println(GREEN + "Elevator " + elevator.GetElevatorView() + " has arrived at floor " + BLUE + (elevator._currentRow + 1));
                 System.out.print(WHITE);
                 System.out.println("Where would you like to send it next?");
-                System.out.print(BLUE);
-                int newCall = _scnr.nextInt();
-                System.out.print(WHITE);
+                boolean correctlyTyped = false;
+                while (!correctlyTyped) {
+                    System.out.print(BLUE);
+                    int nextCall = _scnr.nextInt();
+                    System.out.print(WHITE);
+                    nextCall -= 1;
+                    if (nextCall == 0) {
+                        elevator._isResetting = true;
+                    }
+                    if (nextCall >= _rows || nextCall < 0) {
+                        continue;
+                    }
+                    correctlyTyped = true;
+                    elevator.CallElevatorTo(nextCall);
+                }
                 toRemove.add(elevator);
             }
             _hasArrivedElevators.removeAll(toRemove);

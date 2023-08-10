@@ -34,7 +34,9 @@ public class World {
             }
 
             TickToNextInterval();
-            _building.CheckForIdleElevators();
+            if (_building._intervals >= 1) {
+                _building.CheckForIdleElevators(); //TODO BREAKPOINT HERE
+            }
         }
     }
 
@@ -51,6 +53,7 @@ public class World {
             _building.Tick();
             _building.Build();
         }
+        _building._intervals += 1;
     }
 
     private static void Clear() {
