@@ -7,10 +7,14 @@ public class Elevator {
     public int _currentRow;
     public int _column;
     public char _elevatorIdChar;
-    private ArrayList<Integer> _elevatorCalls;
+    public ArrayList<Integer> _elevatorCalls;
     public boolean _isGoingUp;
     public boolean _isGoingDown;
+    public boolean _wantsToGoUp;
+    public boolean _wantsToGoDown;
     public boolean _isResetting;
+    private int _idleForNIntervals;
+    public boolean _doneForInterval;
 
     public Elevator() {
         _currentRow = 0;
@@ -18,6 +22,8 @@ public class Elevator {
         _isResetting = false;
         _isGoingUp = false;
         _isGoingDown = false;
+        _idleForNIntervals = 0;
+        _doneForInterval = false;
     }
 
     public String GetElevatorView() {
@@ -25,7 +31,7 @@ public class Elevator {
     }
 
     public int CurrentlyGoingTo() {
-        return !_elevatorCalls.isEmpty() ? _elevatorCalls.get(0) : null;
+        return !_elevatorCalls.isEmpty() ? _elevatorCalls.get(0) : -11;
     }
 
     public void SetElevatorId(int id) {
@@ -33,6 +39,8 @@ public class Elevator {
     }
 
     public void CallElevatorTo(int floor) {
+        _idleForNIntervals = 0;
+        //_doneForInterval = false;
         _elevatorCalls.add(floor);
         if (floor != _currentRow) {
             this.StartMovingTowards();
@@ -46,17 +54,25 @@ public class Elevator {
 
     public void CheckIfNeedsResetting() {
         //If elevator is idle and has no calls. Reset back to ground floor.
-        if (_elevatorCalls.isEmpty() && !AtGroundLevel()) {
-            _isResetting = true;
-            _isGoingDown = true;
-            CallElevatorTo(0);
+        if (!AtGroundLevel() && _elevatorCalls.isEmpty()) {
+            _idleForNIntervals += 1;
+            if (_idleForNIntervals >= 2) {
+                _isResetting = true;
+                _isGoingDown = true;
+                _isGoingUp = false;
+                CallElevatorTo(0);
+                _idleForNIntervals = 0;
+            }
         }
     }
 
     private void MoveElevator() {
+        if (_doneForInterval) {
+            return;
+        }
         // If elevator is at ground level and has a call
         if (AtGroundLevel() && !_elevatorCalls.isEmpty()) {
-            _isGoingUp = true;
+            if (_wantsToGoUp) _isGoingUp = true;
         }
         //Move elevator
         if (_isGoingUp) {
@@ -74,14 +90,14 @@ public class Elevator {
                 if (!_isResetting) {
                     arrivedElevator = this;
                 }
+                if (_currentRow == 0) {
+                    _isGoingDown = false;
+                    _isGoingUp = false;
+                }
+                _doneForInterval = true;
+                _isResetting = false;
                 _elevatorCalls.remove(i);
             }
-            
-        }
-        if (_elevatorCalls.isEmpty()) {
-            _isGoingDown = false;
-            _isGoingUp = false;
-            _isResetting = false;
         }
         return arrivedElevator;
     }
@@ -99,6 +115,8 @@ public class Elevator {
     }
 
     public void StartMovingTowards() {
+        if (_currentRow == CurrentlyGoingTo()) return;
+
         if (_currentRow < CurrentlyGoingTo()) {
             _isGoingUp = true;
             _isGoingDown = false;

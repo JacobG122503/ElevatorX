@@ -34,9 +34,7 @@ public class World {
             }
 
             TickToNextInterval();
-            if (_building._intervals >= 1) {
-                _building.CheckForIdleElevators(); //TODO BREAKPOINT HERE
-            }
+            _building.FinishUpInterval(); 
         }
     }
 
@@ -44,7 +42,7 @@ public class World {
     private void TickToNextInterval() {
         for (int i = 0; i < _ticks; i++) {
             try {
-                Thread.sleep(333);
+                Thread.sleep(250);
             } 
             catch (InterruptedException e) {
                 System.err.println(e.getMessage());
@@ -53,7 +51,6 @@ public class World {
             _building.Tick();
             _building.Build();
         }
-        _building._intervals += 1;
     }
 
     private static void Clear() {

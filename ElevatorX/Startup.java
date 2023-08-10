@@ -7,6 +7,8 @@ public class Startup {
     private static int _nmbOfFloors;
     private static int _nmbOfElevators;
     private static int _ticks;
+    private static final String CYAN = "\u001B[36m";
+    private static final String WHITE = "\u001B[0m";
 
     public static void main(String args[]) throws InterruptedException {
 
@@ -30,9 +32,9 @@ public class Startup {
             System.out.println("How many elevators would you like your building to have?");
             _nmbOfElevators = scnr.nextInt();
 
-            System.out.println("How many ticks would you like to have per interval? (1 tick = 1/3 second)");
+            System.out.println("How many ticks would you like to have per interval? (1 tick = 1/4 second)");
             _ticks = scnr.nextInt();
-
+            System.out.println(CYAN + "#########################################################################" + WHITE);
             System.out.println("Is this correct? Floors: " + _nmbOfFloors + ", Elevators: " + _nmbOfElevators);
             System.out.println("Ticks per interval: " + _ticks);
             System.out.println("y or n");
