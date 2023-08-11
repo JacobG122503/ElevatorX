@@ -1,10 +1,10 @@
 # ElevatorX
-### Created by Jacob Garcia 
-#### 1.0.0
+## Created by Jacob Garcia 
+### <ins>1.0.0</ins>
 
 ElevatorX is a console application written in Java. It is essentially an elevator simulation. The user can pick how many floors they want their building to have. 
 They can also chose how many elevators they want to have.
-All of the logic will still work, no matter how many floors/elevators the user chooses. 
+All of the logic will still work, no matter how many floors/elevators you choose. 
 
 ## Getting Started
 When you first start the program, you are shown the three questions below. You can have as many floors/elevators you want. Depending on what you have your screen zoom set to, having 50+ might not be the best choice.
