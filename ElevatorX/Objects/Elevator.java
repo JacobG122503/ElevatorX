@@ -14,9 +14,10 @@ public class Elevator {
     public boolean _wantsToGoDown;
     public boolean _isResetting;
     private int _idleForNIntervals;
+    private int _topFloor;
     public boolean _doneForInterval;
 
-    public Elevator() {
+    public Elevator(int topFloor) {
         _currentRow = 0;
         _elevatorCalls = new ArrayList<Integer>();
         _isResetting = false;
@@ -24,6 +25,7 @@ public class Elevator {
         _isGoingDown = false;
         _idleForNIntervals = 0;
         _doneForInterval = false;
+        _topFloor = topFloor;
     }
 
     public String GetElevatorView() {
@@ -75,7 +77,7 @@ public class Elevator {
             if (_wantsToGoUp) _isGoingUp = true;
         }
         //Move elevator
-        if (_isGoingUp) {
+        if (_isGoingUp && _currentRow+1 <= _topFloor) {
             _currentRow += 1;
         }
         if (_isGoingDown) {

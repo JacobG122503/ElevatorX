@@ -64,7 +64,7 @@ public class Building {
 
         //Initialize 
         for (int i = 0; i < nmbOfElevators; i++, columnPlacement += 2) {
-            _elevators.add(new Elevator());
+            _elevators.add(new Elevator(_rows-1));
             _elevators.get(i)._column = columnPlacement;
             _elevators.get(i).SetElevatorId(i);
         }
