@@ -33,6 +33,6 @@ you would like to send it next.
 ![image](https://github.com/JacobG122503/ElevatorX/assets/97966190/3c7a6aa1-77ad-4f39-871a-acea9c03a4ed)
 
 ### <ins>Update Notes: </ins>
-1.0.1 - 8/15/23 - Added tests
+1.0.1 - 8/15/23 - Added tests and fixed small bug.
 
 1.0.0 - 8/11/23 - Initial release 
