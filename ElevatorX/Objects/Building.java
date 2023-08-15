@@ -273,4 +273,8 @@ public class Building {
 
         return floorList;
     }
+
+    public ArrayList<Elevator> GetElevatorList() {
+        return _elevators;
+    }
 }
