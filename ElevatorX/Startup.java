@@ -2,6 +2,11 @@ import java.util.Scanner;
 
 import Objects.World;
 
+/**
+ * Author: Jacob Garcia
+ * Version Number: 1.0.1
+ * Last Updated: 8/15/23
+ */
 public class Startup {
     
     private static int _nmbOfFloors;

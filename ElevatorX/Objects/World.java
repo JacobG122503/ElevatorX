@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class World {
     
-    private Building _building;
+    public Building _building;
     private int _ticks;
     private Scanner _scnr;
 
@@ -19,7 +19,7 @@ public class World {
         String result = "";
         _building.Build();
 
-        while (!result.equals("s")) { //TODO Add demolish building option and animation
+        while (!result.equals("s")) {
             _building.CheckAndPrintArriveStrings();
             System.out.println("Press c to call an elevator or n to go to next interval. s to stop program");
             result = _scnr.next();
@@ -34,12 +34,11 @@ public class World {
             }
 
             TickToNextInterval();
-            _building.FinishUpInterval(); 
         }
     }
 
     
-    private void TickToNextInterval() {
+    public void TickToNextInterval() {
         for (int i = 0; i < _ticks; i++) {
             try {
                 Thread.sleep(250);
@@ -51,6 +50,7 @@ public class World {
             _building.Tick();
             _building.Build();
         }
+        _building.FinishUpInterval(); 
     }
 
     private static void Clear() {

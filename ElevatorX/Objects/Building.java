@@ -124,7 +124,7 @@ public class Building {
         Build();
     }
     
-    private Elevator FindNearestElevator(int floor, boolean wantToGoUp, boolean wantToGoDown) {
+    public Elevator FindNearestElevator(int floor, boolean wantToGoUp, boolean wantToGoDown) {
         int[] distances = new int[_elevators.size()];
 
         //Checking to make sure call is actually possible.
@@ -159,18 +159,14 @@ public class Building {
             if (currentlyGoingTo == -11) continue;
 
             //When elevator is already going up AND elevators target floor is above called floor AND elevator is below floor called.
-            if (currentElevator._isGoingUp && floor < currentlyGoingTo && floor > currentElevator._currentRow && wantToGoUp) {
-                if (currentDistance < 0 ) {
-                    distanceCandidates.add(Math.abs(currentDistance));
-                    closestElevatorCandidates.add(currentElevator);
-                } 
+            if (currentElevator._isGoingUp && floor < currentlyGoingTo && floor > currentElevator._currentRow && wantToGoUp && currentElevator._wantsToGoUp) {
+                distanceCandidates.add(Math.abs(currentDistance));
+                closestElevatorCandidates.add(currentElevator);
             }
             //When elevator is already going down AND elevators target is below called floor AND elevator is above the floor called 
-            if (currentElevator._isGoingDown && floor > currentlyGoingTo && floor < currentElevator._currentRow && wantToGoDown) {
-                if (currentDistance > 0) {
-                    distanceCandidates.add(currentDistance);
-                    closestElevatorCandidates.add(currentElevator);
-                } 
+            if (currentElevator._isGoingDown && floor > currentlyGoingTo && floor < currentElevator._currentRow && wantToGoDown && currentElevator._wantsToGoDown) {
+                distanceCandidates.add(currentDistance);
+                closestElevatorCandidates.add(currentElevator);
             }
             //If elevator is on floor already, return.
             if (currentDistance == 0) {
@@ -272,5 +268,9 @@ public class Building {
         }
 
         return floorList;
+    }
+
+    public ArrayList<Elevator> GetElevatorList() {
+        return _elevators;
     }
 }
