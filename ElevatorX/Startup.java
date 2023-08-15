@@ -4,8 +4,8 @@ import Objects.World;
 
 /**
  * Author: Jacob Garcia
- * Version Number: 1.1.0
- * Last Updated: 8/xx/23
+ * Version Number: 1.0.1
+ * Last Updated: 8/15/23
  */
 public class Startup {
     

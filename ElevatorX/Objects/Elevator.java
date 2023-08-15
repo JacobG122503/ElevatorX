@@ -42,7 +42,6 @@ public class Elevator {
 
     public void CallElevatorTo(int floor) {
         _idleForNIntervals = 0;
-        //_doneForInterval = false;
         _elevatorCalls.add(floor);
         if (floor != _currentRow) {
             this.StartMovingTowards();
