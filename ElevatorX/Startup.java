@@ -17,6 +17,9 @@ public class Startup {
 
     public static void main(String args[]) throws InterruptedException {
 
+        ElevatorGUI gui = new ElevatorGUI();
+        gui.setVisible(true);
+
         boolean confirmed = false;
         Scanner scnr = new Scanner(System.in);
 
